@@ -1,0 +1,36 @@
+global:
+  scrape_interval: 10s
+  evaluation_interval: 10s
+
+scrape_configs:
+  - job_name: 'auth-service'
+    static_configs:
+      - targets: ['auth-service:2112']
+
+  - job_name: 'user-service'
+    static_configs:
+      - targets: ['user-service:2112']
+
+  - job_name: 'car-service'
+    static_configs:
+      - targets: ['car-service:2112']
+
+  - job_name: 'rental-service'
+    static_configs:
+      - targets: ['rental-service:2112']
+
+  - job_name: 'payment-service'
+    static_configs:
+      - targets: ['payment-service:2112']
+
+  - job_name: 'feedback-service'
+    static_configs:
+      - targets: ['feedback-service:2112']
+
+  - job_name: 'statistics-service'
+    static_configs:
+      - targets: ['statistics-service:2112']
+
+  - job_name: 'notification-service'
+    static_configs:
+      - targets: ['notification-service:2112']

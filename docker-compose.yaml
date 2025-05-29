@@ -1,0 +1,167 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: car_rental
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  nats:
+    image: nats:2.9
+    container_name: nats
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    depends_on:
+      - postgres
+      - nats
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - NATS_URL=${NATS_URL}
+    ports:
+      - "50051:50051"
+      - "2112:2112"
+
+  user-service:
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    depends_on:
+      - postgres
+      - nats
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - NATS_URL=${NATS_URL}
+    ports:
+      - "50052:50052"
+      - "2113:2112"
+
+  car-service:
+    build:
+      context: .
+      dockerfile: car-service/Dockerfile
+    depends_on:
+      - postgres
+      - nats
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - NATS_URL=${NATS_URL}
+    ports:
+      - "50053:50053"
+      - "2114:2112"
+
+  rental-service:
+    build:
+      context: .
+      dockerfile: rental-service/Dockerfile
+    depends_on:
+      - postgres
+      - nats
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - NATS_URL=${NATS_URL}
+      - DB_URL=${DB_URL}
+    ports:
+      - "50056:50056"
+      - "2117:2112"
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: payment-service/Dockerfile
+    depends_on:
+      - postgres
+      - nats
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - NATS_URL=${NATS_URL}
+      - DB_URL=${DB_URL}
+    ports:
+      - "50057:50057"
+      - "2118:2112"
+
+  feedback-service:
+    build:
+      context: .
+      dockerfile: feedback-service/Dockerfile
+    depends_on:
+      - postgres
+      - nats
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - NATS_URL=${NATS_URL}
+      - DB_URL=${DB_URL}
+    ports:
+      - "50054:50054"
+      - "2115:2112"
+
+  statistics-service:
+    build:
+      context: .
+      dockerfile: statistics-service/Dockerfile
+    depends_on:
+      - postgres
+      - nats
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - NATS_URL=${NATS_URL}
+      - DB_URL=${DB_URL}
+
+    ports:
+      - "50055:50055"
+      - "2116:2112"
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+    depends_on:
+      - nats
+    restart: on-failure
+    environment:
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - NATS_URL=${NATS_URL}
+    ports:
+      - "50058:50058"
+      - "2119:2112"
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  pgdata:
+  grafana_data:
