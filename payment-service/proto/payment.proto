@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package payment;
+
+option go_package = "CarRental/payment-service/proto;pb";
+
+
+import "google/protobuf/timestamp.proto";
+
+message Payment {
+  int64 id = 1;
+  int64 rental_id = 2;
+  double amount = 3;
+  string method = 4;
+  string status = 5;
+  google.protobuf.Timestamp paid_at = 6;
+}
+
+message ProcessPaymentRequest {
+  int64 rental_id = 1;
+  double amount = 2;
+  string method = 3;
+}
+
+message ProcessPaymentResponse {
+  int64 payment_id = 1;
+}
+
+message GetPaymentRequest {
+  int64 id = 1;
+}
+
+message GetPaymentResponse {
+  Payment payment = 1;
+}
+
+service PaymentService {
+  rpc ProcessPayment(ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse);
+}
