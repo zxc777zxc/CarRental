@@ -1,0 +1,59 @@
+syntax = "proto3";
+option go_package = "CarRental/car-service/proto;proto";
+package car;
+
+service CarService {
+  rpc CreateCar (CreateCarRequest) returns (CarResponse);
+  rpc GetCarByID (GetCarByIDRequest) returns (CarResponse);
+  rpc ListCars (Empty) returns (CarListResponse);
+  rpc UpdateCar (UpdateCarRequest) returns (CarResponse);
+  rpc DeleteCar (DeleteCarRequest) returns (DeleteResponse);
+}
+
+message Empty {}
+
+message Car {
+  int64 id = 1;
+  string brand = 2;
+  string model = 3;
+  string fuel = 4;
+  string transmission = 5;
+  float price_per_day = 6;
+}
+
+message CreateCarRequest {
+  string brand = 1;
+  string model = 2;
+  string fuel = 3;
+  string transmission = 4;
+  float price_per_day = 5;
+}
+
+message GetCarByIDRequest {
+  int64 id = 1;
+}
+
+message UpdateCarRequest {
+  int64 id = 1;
+  string brand = 2;
+  string model = 3;
+  string fuel = 4;
+  string transmission = 5;
+  float price_per_day = 6;
+}
+
+message DeleteCarRequest {
+  int64 id = 1;
+}
+
+message CarResponse {
+  Car car = 1;
+}
+
+message CarListResponse {
+  repeated Car cars = 1;
+}
+
+message DeleteResponse {
+  bool success = 1;
+}
