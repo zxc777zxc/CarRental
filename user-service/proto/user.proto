@@ -1,0 +1,46 @@
+syntax = "proto3";
+option go_package = "CarRental/user-service/proto;proto";
+package user;
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (UserResponse);
+  rpc GetUserByID (GetUserByIDRequest) returns (UserResponse);
+  rpc GetUserByEmail (GetUserByEmailRequest) returns (UserResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteResponse);
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string name = 2;
+  string phone = 3;
+}
+
+message GetUserByIDRequest {
+  int64 id = 1;
+}
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message UpdateUserRequest {
+  int64 id = 1;
+  string name = 2;
+  string phone = 3;
+}
+
+message DeleteUserRequest {
+  int64 id = 1;
+}
+
+message UserResponse {
+  int64 id = 1;
+  string email = 2;
+  string name = 3;
+  string phone = 4;
+}
+
+message DeleteResponse {
+  bool success = 1;
+}
