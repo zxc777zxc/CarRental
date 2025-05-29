@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package statistics;
+
+option go_package = "CarRental/statistics-service/proto;proto";
+
+message Statistics {
+  int64 total_orders = 1;
+  double total_revenue = 2;
+  double average_rating = 3;
+  int64 total_feedbacks = 4;
+}
+
+message GetStatisticsRequest {}
+
+message GetStatisticsResponse {
+  Statistics stats = 1;
+}
+
+service StatisticsService {
+  rpc GetStatistics(GetStatisticsRequest) returns (GetStatisticsResponse);
+}
