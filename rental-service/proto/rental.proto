@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package rental;
+
+option go_package = "	CarRental/rental-service/proto;proto";
+
+import "google/protobuf/timestamp.proto";
+
+message Rental {
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 car_id = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  double total_cost = 6;
+  string status = 7;
+}
+
+message RentCarRequest {
+  int64 user_id = 1;
+  int64 car_id = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+  double daily_price = 5;
+}
+
+message RentCarResponse {
+  int64 rental_id = 1;
+}
+
+message CompleteRentalRequest {
+  int64 rental_id = 1;
+}
+
+message CompleteRentalResponse {
+  string message = 1;
+}
+
+message GetRentalRequest {
+  int64 rental_id = 1;
+}
+
+message GetRentalResponse {
+  Rental rental = 1;
+}
+
+message ListUserRentalsRequest {
+  int64 user_id = 1;
+}
+
+message ListUserRentalsResponse {
+  repeated Rental rentals = 1;
+}
+
+service RentalService {
+  rpc RentCar(RentCarRequest) returns (RentCarResponse);
+  rpc CompleteRental(CompleteRentalRequest) returns (CompleteRentalResponse);
+  rpc GetRental(GetRentalRequest) returns (GetRentalResponse);
+  rpc ListUserRentals(ListUserRentalsRequest) returns (ListUserRentalsResponse);
+}
