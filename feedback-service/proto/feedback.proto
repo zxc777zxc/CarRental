@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package feedback;
+
+option go_package = "	CarRental/feedback-service/proto;proto";
+
+import "google/protobuf/timestamp.proto";
+
+message Feedback {
+  int64 id = 1;
+  int64 rental_id = 2;
+  int64 user_id = 3;
+  int32 rating = 4;
+  string comment = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+message SubmitFeedbackRequest {
+  int64 rental_id = 1;
+  int64 user_id = 2;
+  int32 rating = 3;
+  string comment = 4;
+}
+
+message SubmitFeedbackResponse {
+  int64 feedback_id = 1;
+}
+
+message GetFeedbackByRentalRequest {
+  int64 rental_id = 1;
+}
+
+message GetFeedbackByRentalResponse {
+  repeated Feedback feedbacks = 1;
+}
+
+service FeedbackService {
+  rpc SubmitFeedback(SubmitFeedbackRequest) returns (SubmitFeedbackResponse);
+  rpc GetFeedbackByRental(GetFeedbackByRentalRequest) returns (GetFeedbackByRentalResponse);
+}
